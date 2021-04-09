@@ -60,13 +60,15 @@ def yolo_body(inputs, num_anchors, num_classes):
 
     P5 = DarknetConv2D_BN_Leaky(256, (1,1))(feat2)
     P5 = DarknetConv2D_BN_Leaky(512, (3,3))(P5)
-    #P5 = DarknetConv2D_BN_Leaky(512, (1,1))(P5)
+    P5 = DarknetConv2D_BN_Leaky(256, (1,1))(P5)
     # 使用了SPP结构，即不同尺度的最大池化后堆叠。
     maxpool1 = MaxPooling2D(pool_size=(13,13), strides=(1,1), padding='same')(P5)
     maxpool2 = MaxPooling2D(pool_size=(9,9), strides=(1,1), padding='same')(P5)
-    #maxpool3 = MaxPooling2D(pool_size=(5,5), strides=(1,1), padding='same')(P5)
+    maxpool3 = MaxPooling2D(pool_size=(5,5), strides=(1,1), padding='same')(P5)
     P5 = Concatenate()([maxpool1, maxpool2, P5])
-    #P5 = DarknetConv2D_BN_Leaky(512, (1,1))(P5)
+    P5 = DarknetConv2D_BN_Leaky(256, (1,1))(P5)
+    P5 = DarknetConv2D_BN_Leaky(512, (3,3))(P5)
+    P5 = DarknetConv2D_BN_Leaky(256, (1,1))(P5)
     P5 = DarknetConv2D_BN_Leaky(512, (3,3))(P5)
     P5 = DarknetConv2D_BN_Leaky(256, (1,1))(P5)
 
@@ -76,6 +78,11 @@ def yolo_body(inputs, num_anchors, num_classes):
     P4 = DarknetConv2D_BN_Leaky(256, (1,1))(feat1)
     P4 = DarknetConv2D_BN_Leaky(512, (3,3))(P4)
     P4 = DarknetConv2D_BN_Leaky(256, (1,1))(P4)
+    maxpool1 = MaxPooling2D(pool_size=(13,13), strides=(1,1), padding='same')(P4)
+    maxpool2 = MaxPooling2D(pool_size=(9,9), strides=(1,1), padding='same')(P4)
+    P4 = Concatenate()([maxpool1, maxpool2, P4])
+    P4 = DarknetConv2D_BN_Leaky(256, (1,1))(P4)
+    P4 = DarknetConv2D_BN_Leaky(512, (3,3))(P4)
     # 26,26,256 + 26,26,256 -> 26,26,512
     P4 = Concatenate()([P4, P5_upsample])
     
