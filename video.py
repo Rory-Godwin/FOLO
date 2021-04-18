@@ -45,4 +45,3 @@ while(True):
         break
 
 yolo.close_session()
-    

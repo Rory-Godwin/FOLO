@@ -44,10 +44,10 @@ def DarknetConv2D_BN_Leaky(*args, **kwargs):
 #   特征层->最后的输出
 #---------------------------------------------------#
 #######################################################################################
-#######                             RG FOLOv4                                   #######
+#######                             RG FOLOv2                                   #######
 #######                           08/04/2021                                    #######
-#######     OUT 67     IN 62,63,66,67                                           #######
-#######     MOD 61,68,70,71,78-85    ADDED 69,70,71,77,78,81-85                 #######
+#######     OUT 67     IN 62,66                                                 #######
+#######     MOD 61,68,70,71    ADDED 77,78                                      #######
 #######################################################################################
     
 def yolo_body(inputs, num_anchors, num_classes):
@@ -75,14 +75,14 @@ def yolo_body(inputs, num_anchors, num_classes):
     # 13,13,512 -> 13,13,256 -> 26,26,256
     P5_upsample = compose(DarknetConv2D_BN_Leaky(256, (1,1)), UpSampling2D(2))(P5)
     # 26,26,512 -> 26,26,256
-    P4 = DarknetConv2D_BN_Leaky(128, (1,1))(feat1)
-    P4 = DarknetConv2D_BN_Leaky(256, (3,3))(P4)
-    P4 = DarknetConv2D_BN_Leaky(128, (1,1))(P4)
+    P4 = DarknetConv2D_BN_Leaky(256, (1,1))(feat1)
+    P4 = DarknetConv2D_BN_Leaky(512, (3,3))(P4)
+    P4 = DarknetConv2D_BN_Leaky(256, (1,1))(P4)
     maxpool1 = MaxPooling2D(pool_size=(13,13), strides=(1,1), padding='same')(P4)
     maxpool2 = MaxPooling2D(pool_size=(9,9), strides=(1,1), padding='same')(P4)
     P4 = Concatenate()([maxpool1, maxpool2, P4])
-    P4 = DarknetConv2D_BN_Leaky(128, (1,1))(P4)
-    P4 = DarknetConv2D_BN_Leaky(256, (3,3))(P4)
+    P4 = DarknetConv2D_BN_Leaky(256, (1,1))(P4)
+    P4 = DarknetConv2D_BN_Leaky(512, (3,3))(P4)
     # 26,26,256 + 26,26,256 -> 26,26,512
     P4 = Concatenate()([P4, P5_upsample])
     

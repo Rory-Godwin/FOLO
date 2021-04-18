@@ -47,7 +47,7 @@ def merge_bboxes(bboxes, cutx, cuty):
                     x2 = cutx
                     if x2-x1 < 5:
                         continue
-                
+
             if i == 1:
                 if y2 < cuty or x1 > cutx:
                     continue
@@ -56,7 +56,7 @@ def merge_bboxes(bboxes, cutx, cuty):
                     y1 = cuty
                     if y2-y1 < 5:
                         continue
-                
+
                 if x2 >= cutx and x1 <= cutx:
                     x2 = cutx
                     if x2-x1 < 5:
@@ -123,7 +123,7 @@ def get_random_data_with_Mosaic(annotation_line, input_shape, max_boxes=100, hue
         iw, ih = image.size
         # 保存框的位置
         box = np.array([np.array(list(map(int,box.split(',')))) for box in line_content[1:]])
-        
+
         # 是否翻转图片
         flip = rand()<.5
         if flip and len(box)>0:
@@ -179,7 +179,7 @@ def get_random_data_with_Mosaic(annotation_line, input_shape, max_boxes=100, hue
             box = box[np.logical_and(box_w>1, box_h>1)]
             box_data = np.zeros((len(box),5))
             box_data[:len(box)] = box
-        
+
         image_datas.append(image_data)
         box_datas.append(box_data)
 
@@ -241,7 +241,7 @@ def get_random_data(annotation_line, input_shape, max_boxes=100, jitter=.3, hue=
             box_data[:len(box)] = box
 
         return image_data, box_data
-        
+
     # 对图像进行缩放并且进行长和宽的扭曲
     new_ar = w/h * rand(1-jitter,1+jitter)/rand(1-jitter,1+jitter)
     scale = rand(.25, 2)
@@ -294,7 +294,7 @@ def get_random_data(annotation_line, input_shape, max_boxes=100, jitter=.3, hue=
         box = box[np.logical_and(box_w>1, box_h>1)] # discard invalid box
         if len(box)>max_boxes: box = box[:max_boxes]
         box_data[:len(box)] = box
-    
+
     return image_data, box_data
 
 
